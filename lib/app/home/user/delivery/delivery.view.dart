@@ -7,6 +7,7 @@ import 'package:v_post/app/components/appbar/appbar.component.dart';
 import 'package:v_post/app/components/common-button/common-button.component.dart';
 import 'package:v_post/app/components/text-field/text-field.component.dart';
 import 'package:v_post/app/home/user/delivery/delivery.module.dart';
+import 'package:v_post/app/home/user/delivery/place-picking/place-picking.view.dart';
 import 'package:v_post/app/home/user/home.module.dart';
 import 'package:v_post/config/config_screen.dart';
 import 'package:v_post/themes/style.dart';
@@ -82,8 +83,13 @@ class _DeliveryWidgetState extends State<DeliveryWidget> {
                 Align(
                   alignment: Alignment.center,
                   child: CommonButton(
-                    onPressed: () => Modular.to
-                        .pushNamed(AppModule.user + UserHomeModule.delivery + UserHomeModule.delivery + DeliveryModule.deliveryConfirmation),
+                    // onPressed: () => Modular.to
+                    //     .pushNamed(AppModule.user + UserHomeModule.delivery + UserHomeModule.delivery + DeliveryModule.deliveryConfirmation),
+                    onPressed: () {
+                      print(AppModule.user + UserHomeModule.delivery + DeliveryModule.placePicking);
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => PlacePicking()));
+                      // Modular.to.pushNamed(AppModule.user + UserHomeModule.delivery + DeliveryModule.placePicking);
+                    },
                     child: Text(
                       "Tiếp theo",
                       style: Theme.of(context).textTheme.bodyText1!.copyWith(

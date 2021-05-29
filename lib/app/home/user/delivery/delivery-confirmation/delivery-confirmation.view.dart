@@ -47,7 +47,7 @@ class _DeliveryConfirmationWidgetState extends State<DeliveryConfirmationWidget>
       [
         _NestedData(name: "picking_date", hintText: "Ngày lấy hàng", icon: Icon(Icons.calendar_today_outlined)),
         _NestedData(name: "receive_date", hintText: "Ngày nhận", icon: Icon(Icons.calendar_today_outlined)),
-        _NestedData(name: "distance", hintText: "Khoảng cách", icon: Icon(Icons.social_distance_outlined)),
+        _NestedData(name: "distance", hintText: "Khoảng cách", icon: Icon(Icons.check_box)),
         _NestedData(name: "fee", hintText: "Giá vận chuyển", icon: Icon(Icons.attach_money_outlined)),
       ],
     ),

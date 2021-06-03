@@ -15,6 +15,7 @@ class _NestedData {
   String senderAddress;
   String receiverAddress;
   String status;
+  String customerName;
 
   _NestedData({
     required this.status,
@@ -22,39 +23,47 @@ class _NestedData {
     required this.price,
     required this.receiverAddress,
     required this.senderAddress,
+    required this.customerName,
   });
 }
 
-class HistoryWidget extends StatefulWidget {
-  const HistoryWidget({Key? key}) : super(key: key);
+class ShippingOrderWidget extends StatefulWidget {
+  const ShippingOrderWidget({Key? key}) : super(key: key);
 
   @override
-  _HistoryWidgetState createState() => _HistoryWidgetState();
+  _ShippingOrderWidgetState createState() => _ShippingOrderWidgetState();
 }
 
-class _HistoryWidgetState extends State<HistoryWidget> {
+class _ShippingOrderWidgetState extends State<ShippingOrderWidget> {
   List<_NestedData> _data = [
     _NestedData(
-      status: "Đã giao / Đang giao",
-      code: 132422211,
-      price: 75000,
-      receiverAddress: "144 Xuân Thủy, Cầu Giấy",
-      senderAddress: "175 Láng Hạ",
-    ),
+        status: "Đã có shipper(Thì hiện tên)/ Chưa có shipper",
+        code: 132422211,
+        price: 75000,
+        receiverAddress: "144 Xuân Thủy, Cầu Giấy",
+        senderAddress: "175 Láng Hạ",
+        customerName: "Đỗ Vân"),
     _NestedData(
-      status: "Đã giao / Đang giao",
-      code: 132422211,
-      price: 75000,
-      receiverAddress: "144 Xuân Thủy, Cầu Giấy",
-      senderAddress: "175 Láng Hạ",
-    ),
+        status: "Đã có shipper(Thì hiện tên)/ Chưa có shipper",
+        code: 132422211,
+        price: 75000,
+        receiverAddress: "144 Xuân Thủy, Cầu Giấy",
+        senderAddress: "175 Láng Hạ",
+        customerName: "Đỗ Vân"),
     _NestedData(
-      status: "Đã giao / Đang giao",
-      code: 132422211,
-      price: 75000,
-      receiverAddress: "144 Xuân Thủy, Cầu Giấy",
-      senderAddress: "175 Láng Hạ",
-    ),
+        status: "Đã có shipper(Thì hiện tên)/ Chưa có shipper",
+        code: 132422211,
+        price: 75000,
+        receiverAddress: "144 Xuân Thủy, Cầu Giấy",
+        senderAddress: "175 Láng Hạ",
+        customerName: "Đỗ Vân"),
+    _NestedData(
+        status: "Đã có shipper(Thì hiện tên)/ Chưa có shipper",
+        code: 132422211,
+        price: 75000,
+        receiverAddress: "144 Xuân Thủy, Cầu Giấy",
+        senderAddress: "175 Láng Hạ",
+        customerName: "Đỗ Vân"),
   ];
 
   @override
@@ -69,7 +78,7 @@ class _HistoryWidgetState extends State<HistoryWidget> {
             children: [
               SizedBox(height: SizeConfig.safeBlockVertical * 2),
               Text(
-                "Lịch sử",
+                "Quản lý đơn hàng",
                 style: Theme.of(context).textTheme.bodyText1!.copyWith(fontWeight: FontWeight.w700, fontSize: 30),
               ),
               ..._data.map((e) => buildCardWidget(
@@ -109,7 +118,7 @@ class _HistoryWidgetState extends State<HistoryWidget> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("Mã đơn : ${data.code}", style: Theme.of(context).textTheme.bodyText1!.copyWith(fontWeight: FontWeight.w700)),
+                        Text("Mã đơn : ID${data.code}", style: Theme.of(context).textTheme.bodyText1!.copyWith(fontWeight: FontWeight.w700)),
                         Text("Chi tiết",
                             style: Theme.of(context).textTheme.bodyText1!.copyWith(fontWeight: FontWeight.w700, color: Color(0xFF2196F3)))
                       ],
@@ -118,6 +127,14 @@ class _HistoryWidgetState extends State<HistoryWidget> {
                       padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                       child: Column(
                         children: [
+                          Row(
+                            children: [
+                              Icon(Icons.person_outlined, color: Color(0xFF2196F3), size: 14),
+                              SizedBox(width: SizeConfig.safeBlockHorizontal),
+                              Text("Họ tên khách hàng: ${data.customerName}",
+                                  style: Theme.of(context).textTheme.bodyText1!.copyWith(color: Color(0xFF404040)))
+                            ],
+                          ),
                           Row(
                             children: [
                               Icon(Icons.my_location, color: Color(0xFF2196F3), size: 14),
@@ -131,13 +148,6 @@ class _HistoryWidgetState extends State<HistoryWidget> {
                               SizedBox(width: SizeConfig.safeBlockHorizontal),
                               Text("Điểm đến: ${data.receiverAddress}",
                                   style: Theme.of(context).textTheme.bodyText1!.copyWith(color: Color(0xFF404040)))
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Icon(Icons.loop_outlined, color: Color(0xFF2196F3), size: 14),
-                              SizedBox(width: SizeConfig.safeBlockHorizontal),
-                              Text("Trạng thái: ${data.status}", style: Theme.of(context).textTheme.bodyText1!.copyWith(color: Color(0xFF404040)))
                             ],
                           ),
                         ],

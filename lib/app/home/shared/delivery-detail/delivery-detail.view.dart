@@ -15,7 +15,9 @@ class _NestedData {
 }
 
 class DeliveryDetail extends StatefulWidget {
-  const DeliveryDetail({Key? key}) : super(key: key);
+  final bool hasRating;
+
+  const DeliveryDetail({Key? key, this.hasRating = false}) : super(key: key);
 
   @override
   _DeliveryDetailState createState() => _DeliveryDetailState();

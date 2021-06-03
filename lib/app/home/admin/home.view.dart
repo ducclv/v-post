@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:v_post/app/home/admin/home.module.dart';
+import 'package:v_post/app/home/admin/manage-order/manage-order.module.dart';
+import 'package:v_post/app/home/admin/shipper-list/shipper-list.view.dart';
 import 'package:v_post/app/home/shared/profile/profile.view.dart';
-import 'package:v_post/app/home/user/delivery/delivery.module.dart';
-import 'package:v_post/app/home/user/history/history.view.dart';
-import 'package:v_post/app/home/user/home.module.dart';
 
-class UserHomeWidget extends StatefulWidget {
-  const UserHomeWidget({Key? key}) : super(key: key);
+class AdminHomeWidget extends StatefulWidget {
+  const AdminHomeWidget({Key? key}) : super(key: key);
 
   @override
-  _UserHomeWidgetState createState() => _UserHomeWidgetState();
+  _AdminHomeWidgetState createState() => _AdminHomeWidgetState();
 }
 
-class _UserHomeWidgetState extends State<UserHomeWidget> {
+class _AdminHomeWidgetState extends State<AdminHomeWidget> {
   List<Map<String, dynamic>> _mainModules = [
-    {'icon': Icon(Icons.local_shipping_outlined), 'label': 'Giao hàng', 'widget': DeliveryModule(), 'route': UserHomeModule.delivery},
-    {'icon': Icon(Icons.bar_chart_outlined), 'label': 'Lịch sử', 'widget': HistoryWidget(), 'route': UserHomeModule.history},
-    {'icon': Icon(Icons.person_outlined), 'label': 'Cá nhân', 'widget': ProfileWidget(), 'route': UserHomeModule.profile},
+    {'icon': Icon(Icons.local_shipping_outlined), 'label': 'Quản lý đơn hàng', 'widget': ManageOrderModule(), 'route': AdminHomeModule.delivery},
+    {'icon': Icon(Icons.view_list_outlined), 'label': 'Danh sách tài xế', 'widget': ShipperListWidget(), 'route': AdminHomeModule.history},
+    {'icon': Icon(Icons.person_outlined), 'label': 'Cá nhân', 'widget': ProfileWidget(), 'route': AdminHomeModule.profile},
   ];
 
   int _selectIndex = 0;

@@ -83,6 +83,7 @@ class _DeliveryWidgetState extends State<DeliveryWidget> {
                 Align(
                   alignment: Alignment.center,
                   child: CommonButton(
+<<<<<<< HEAD
                     // onPressed: () => Modular.to
                     //     .pushNamed(AppModule.user + UserHomeModule.delivery + UserHomeModule.delivery + DeliveryModule.deliveryConfirmation),
                     onPressed: () {
@@ -90,6 +91,9 @@ class _DeliveryWidgetState extends State<DeliveryWidget> {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => PlacePicking()));
                       // Modular.to.pushNamed(AppModule.user + UserHomeModule.delivery + DeliveryModule.placePicking);
                     },
+=======
+                    onPressed: () => Modular.to.pushNamed(AppModule.user + UserHomeModule.delivery + DeliveryModule.deliveryConfirmation),
+>>>>>>> f9eef9ed6f7c1905e4f56c5d581b5ddcc2f3214b
                     child: Text(
                       "Tiếp theo",
                       style: Theme.of(context).textTheme.bodyText1!.copyWith(
@@ -159,7 +163,8 @@ class _DeliveryWidgetState extends State<DeliveryWidget> {
             ),
             prefixIcon: e.icon,
           ),
-          onTap: () => Modular.to.pushNamed(AppModule.user + UserHomeModule.delivery + DeliveryModule.placePicking),
+          // Todo: uncomment to navigate to place picking.
+          // onTap: () => Modular.to.pushNamed(AppModule.user + UserHomeModule.delivery + DeliveryModule.placePicking),
           keyboardType: TextInputType.text,
           validator: FormBuilderValidators.required(context),
         ),

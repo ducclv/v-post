@@ -1,7 +1,5 @@
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:v_post/app/home/admin/home.module.dart';
 import 'package:v_post/app/home/shared/shared.module.dart';
-import 'package:v_post/app/home/shipper/home.module.dart';
 import 'package:v_post/app/home/switching.view.dart';
 import 'package:v_post/app/home/user/home.module.dart';
 import 'package:v_post/app/login/login.view.dart';
@@ -26,8 +24,6 @@ class AppModule extends Module {
   @override
   final List<ModularRoute> routes = [
     ModuleRoute(user, module: UserHomeModule(), transition: TransitionType.rightToLeftWithFade),
-    ModuleRoute(admin, module: AdminHomeModule(), transition: TransitionType.rightToLeftWithFade),
-    ModuleRoute(shipper, module: ShipperHomeModule(), transition: TransitionType.rightToLeftWithFade),
     ModuleRoute(shared, module: SharedModule(), transition: TransitionType.rightToLeftWithFade),
     ChildRoute(splashScreen, child: (context, args) => SplashScreen()),
     ChildRoute(login, child: (context, args) => Login(), transition: TransitionType.downToUp),

@@ -30,22 +30,25 @@ class _LoginState extends State<Login> {
     return Scaffold(
       appBar: staticAppbar(title: AppTitle()),
       backgroundColor: AppColor.white,
-      body: Container(
-        alignment: Alignment.center,
-        padding: EdgeInsets.all(15),
-        child: Column(
-          children: [
-            Spacer(flex: 2),
-            Text(
-              "Đăng nhập",
-              style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 30, fontWeight: FontWeight.w700),
-            ),
-            Spacer(),
-            SizedBox(child: buildLoginWidget(), width: SizeConfig.safeBlockHorizontal * 85),
-            SizedBox(height: SizeConfig.safeBlockVertical),
-            SizedBox(child: buildOtherMethodWidget(), width: SizeConfig.safeBlockHorizontal * 80),
-            Spacer(flex: 4),
-          ],
+      body: SingleChildScrollView(
+        child: Container(
+          alignment: Alignment.center,
+          padding: EdgeInsets.all(15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: SizeConfig.safeBlockHorizontal * 10),
+              Text(
+                "Đăng nhập",
+                style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 30, fontWeight: FontWeight.w700),
+              ),
+              SizedBox(height: SizeConfig.safeBlockHorizontal),
+              SizedBox(child: buildLoginWidget(), width: SizeConfig.safeBlockHorizontal * 85),
+              SizedBox(height: SizeConfig.safeBlockVertical),
+              SizedBox(child: buildOtherMethodWidget(), width: SizeConfig.safeBlockHorizontal * 80),
+              SizedBox(height: SizeConfig.safeBlockHorizontal * 20),
+            ],
+          ),
         ),
       ),
     );

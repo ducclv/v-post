@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 
 PreferredSizeWidget staticAppbar(
         {double? height,
+        Color? color,
         Widget? title,
         List<Widget>? actions,
         Widget? leading,
@@ -13,7 +14,7 @@ PreferredSizeWidget staticAppbar(
     AppBar(
       elevation: 0,
       toolbarHeight: height,
-      backgroundColor: Colors.white,
+      backgroundColor: color ?? Colors.white,
       title: title,
       centerTitle: centerTitle,
       actions: actions,

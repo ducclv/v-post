@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:v_post/app/components/appbar/appbar.component.dart';
 import 'package:v_post/app/home/user/delivery/place-picking/place-picking.cubit.dart';
 import 'package:v_post/config/config_screen.dart';
+import 'package:v_post/themes/style.dart';
 import 'package:wemapgl/wemapgl.dart';
 
 class PlacePicking extends StatefulWidget {
@@ -18,15 +21,30 @@ class _PlacePickingState extends State<PlacePicking> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: staticAppbar(title: Text('Chọn địa chỉ'),leading: BackButtonWidget()),
+      appBar: staticAppbar(
+        centerTitle: true,
+        title: Text(
+          'Chọn địa chỉ',
+          style: TextStyle(color: AppColor.accentColor),
+        ),
+        leading: BackButtonWidget(),
+        actions: [
+          Container(
+            margin: EdgeInsets.all(10),
+            child: IconButton(
+              icon: Icon(Icons.check, color: AppColor.accentColor,),
+              onPressed: () {
+                Navigator.pop(context,_cubit.place);
+              },
+            ),
+          ),
+        ],
+      ),
       body: Container(
           margin: EdgeInsets.symmetric(vertical: 15),
           child: Stack(
             children: [
-              BlocBuilder<PlacePickingCubit, PlacePickingState>(
-                bloc: _cubit,
-                builder: (context, state) => _buildMap(),
-              ),
+              _buildMap(),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
@@ -52,6 +70,11 @@ class _PlacePickingState extends State<PlacePicking> {
                               CameraPosition(target: _cubit.place?.location, zoom: 14.0),
                             ),
                           );
+                          _cubit.mapController.addSymbol(SymbolOptions(
+                            geometry: _place.location,
+                            iconImage: "asset/images/icon/destination.png",
+                            iconSize: 50,
+                          ));
                           _cubit.mapController.showPlaceCard?.call(_cubit.place);
                         },
                         onClearInput: () {
@@ -85,65 +108,7 @@ class _PlacePickingState extends State<PlacePicking> {
                                 color: Colors.grey,
                                 height: 1,
                               ),
-                              TextButton(
-                                  onPressed: () {},
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.my_location),
-                                      SizedBox(
-                                        width: SizeConfig.blockSizeHorizontal * 5,
-                                      ),
-                                      Text(
-                                        'Vị trí của tôi',
-                                        style: TextStyle(color: Colors.black, fontSize: 18),
-                                      )
-                                    ],
-                                  )),
-                              SizedBox(height: 10),
-                              TextButton(
-                                  onPressed: () {},
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.my_location),
-                                      SizedBox(
-                                        width: SizeConfig.blockSizeHorizontal * 5,
-                                      ),
-                                      Text(
-                                        'Vị trí của tôi',
-                                        style: TextStyle(color: Colors.black, fontSize: 18),
-                                      )
-                                    ],
-                                  )),
-                              SizedBox(height: 10),
-                              TextButton(
-                                  onPressed: () {},
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.my_location),
-                                      SizedBox(
-                                        width: SizeConfig.blockSizeHorizontal * 5,
-                                      ),
-                                      Text(
-                                        'Vị trí của tôi',
-                                        style: TextStyle(color: Colors.black, fontSize: 18),
-                                      )
-                                    ],
-                                  )),
-                              SizedBox(height: 10),
-                              TextButton(
-                                  onPressed: () {},
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.my_location),
-                                      SizedBox(
-                                        width: SizeConfig.blockSizeHorizontal * 5,
-                                      ),
-                                      Text(
-                                        'Vị trí của tôi',
-                                        style: TextStyle(color: Colors.black, fontSize: 18),
-                                      )
-                                    ],
-                                  ))
+                              ...List.generate(_cubit.nearByLocation.length, (index) => _buildNearLocation(index))
                             ],
                           ),
                         ),
@@ -157,25 +122,59 @@ class _PlacePickingState extends State<PlacePicking> {
     );
   }
 
+  Widget _buildNearLocation(int index) {
+    return TextButton(
+      onPressed: () {},
+      child: Container(
+          margin: EdgeInsets.only(top: 10, bottom: 10),
+          child: Row(
+            children: [
+              Icon(
+                Icons.location_on_outlined,
+                size: 40,
+              ),
+              SizedBox(
+                width: SizeConfig.blockSizeHorizontal * 5,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _cubit.nearByLocation.elementAt(index).name ?? "",
+                    style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w600),
+                  ),
+                  SizedBox(
+                    height: SizeConfig.blockSizeVertical / 2,
+                  ),
+                  Container(
+                    width: SizeConfig.safeBlockHorizontal * 70,
+                    child: Text(
+                      _cubit.nearByLocation.elementAt(index).address ?? "",
+                      style: TextStyle(color: Colors.black, fontSize: 15),
+                    ),
+                  )
+                ],
+              ),
+            ],
+          )),
+    );
+  }
+
   Widget _buildMap() {
     return Container(
         color: Colors.white,
         child: Stack(
           children: [
             WeMap(
-              onMapClick: (point, latlng, _place) async {
-                _cubit.place = _place;
-              },
-              onPlaceCardClose: () {
-                // print("Place Card closed");
-              },
+              compassEnabled: true,
               reverse: true,
+              compassViewMargins: Point(24, 550),
               onMapCreated: _cubit.onMapCreate,
               initialCameraPosition: const CameraPosition(
                 target: LatLng(21.036029, 105.782950),
                 zoom: 16.0,
               ),
-              destinationIcon: "assets/images/icon/destination.png",
+              myLocationEnabled: true,
             ),
           ],
         ));

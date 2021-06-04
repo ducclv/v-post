@@ -6,18 +6,21 @@ import 'package:v_post/app/components/app-title/app-title.component.dart';
 import 'package:v_post/app/components/appbar/appbar.component.dart';
 import 'package:v_post/app/components/common-button/common-button.component.dart';
 import 'package:v_post/app/components/text-field/text-field.component.dart';
+import 'package:v_post/app/home/user/delivery/delivery.cubit.dart';
 import 'package:v_post/app/home/user/delivery/delivery.module.dart';
 import 'package:v_post/app/home/user/delivery/place-picking/place-picking.view.dart';
 import 'package:v_post/app/home/user/home.module.dart';
 import 'package:v_post/config/config_screen.dart';
 import 'package:v_post/themes/style.dart';
+import 'package:wemapgl/wemapgl.dart';
 
 class _NestedData {
   String hintText;
   Icon icon;
   String name;
+  int? typeAddress;
 
-  _NestedData({required this.name, required this.hintText, required this.icon});
+  _NestedData({required this.name, required this.hintText, required this.icon, this.typeAddress});
 }
 
 class DeliveryWidget extends StatefulWidget {
@@ -29,14 +32,14 @@ class DeliveryWidget extends StatefulWidget {
 
 class _DeliveryWidgetState extends State<DeliveryWidget> {
   GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
-
+  DeliveryCubit _cubit = DeliveryCubit();
   List<MapEntry<String, List<_NestedData>>> _allForm = [
     MapEntry(
       "Người gửi",
       [
         _NestedData(name: "sender_name", hintText: "Họ và tên", icon: Icon(Icons.person_outlined)),
         _NestedData(name: "sender_phone", hintText: "Số điện thoại", icon: Icon(Icons.call_outlined)),
-        _NestedData(name: "sender_address", hintText: "Địa chỉ", icon: Icon(Icons.place_outlined)),
+        _NestedData(name: "sender_address", hintText: "Địa chỉ", icon: Icon(Icons.place_outlined), typeAddress: 1),
       ],
     ),
     MapEntry(
@@ -44,7 +47,7 @@ class _DeliveryWidgetState extends State<DeliveryWidget> {
       [
         _NestedData(name: "receiver_name", hintText: "Họ và tên", icon: Icon(Icons.person_outlined)),
         _NestedData(name: "receiver_phone", hintText: "Số điện thoại", icon: Icon(Icons.call_outlined)),
-        _NestedData(name: "receiver_address", hintText: "Địa chỉ", icon: Icon(Icons.place_outlined)),
+        _NestedData(name: "receiver_address", hintText: "Địa chỉ", icon: Icon(Icons.place_outlined), typeAddress: 2),
       ],
     ),
     MapEntry(
@@ -129,44 +132,52 @@ class _DeliveryWidgetState extends State<DeliveryWidget> {
             ...data.map(
               (e) => e.hintText != "Địa chỉ"
                   ? TextFieldView(name: e.name, type: 'text_field', hintText: e.hintText, prefixIcon: e.icon)
-                  : buildCustomAddressForm(e),
+                  : buildCustomAddressForm(e, e.typeAddress),
             ),
           ],
         ),
       );
 
-  Widget buildCustomAddressForm(_NestedData e) => Padding(
+  Widget buildCustomAddressForm(_NestedData e, int? type) => Padding(
         padding: EdgeInsets.symmetric(vertical: SizeConfig.safeBlockVertical),
-        child: FormBuilderTextField(
-          name: e.name,
-          maxLines: 1,
-          style: const TextStyle(fontSize: 18),
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(horizontal: 10),
-            hintText: e.hintText,
-            hintStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: Color(0xFF7A7A7A)),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: AppColor.accentColor, width: 1.25, style: BorderStyle.solid),
-              borderRadius: BorderRadius.circular(13),
+        child: Container(
+          child: FormBuilderTextField(
+            name: e.name,
+            maxLines: 1,
+            style: const TextStyle(fontSize: 18),
+            initialValue: type == 1 ? _cubit.placeSender?.placeName ?? "" : _cubit.placeReceiver?.placeName ?? "",
+            key: Key(type == 1 ? _cubit.placeSender?.placeName ?? "" : _cubit.placeReceiver?.placeName ?? ""),
+            decoration: InputDecoration(
+              contentPadding: EdgeInsets.symmetric(horizontal: 10),
+              hintText: e.hintText,
+              hintStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: Color(0xFF7A7A7A)),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: AppColor.accentColor, width: 1.25, style: BorderStyle.solid),
+                borderRadius: BorderRadius.circular(13),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: AppColor.accentColor, width: 1.25, style: BorderStyle.solid),
+                borderRadius: BorderRadius.circular(13),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: AppColor.errorColor, width: 1.25, style: BorderStyle.solid),
+                borderRadius: BorderRadius.circular(13),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: AppColor.errorColor, width: 1.25, style: BorderStyle.solid),
+                borderRadius: BorderRadius.circular(13),
+              ),
+              prefixIcon: e.icon,
             ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: AppColor.accentColor, width: 1.25, style: BorderStyle.solid),
-              borderRadius: BorderRadius.circular(13),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: AppColor.errorColor, width: 1.25, style: BorderStyle.solid),
-              borderRadius: BorderRadius.circular(13),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: AppColor.errorColor, width: 1.25, style: BorderStyle.solid),
-              borderRadius: BorderRadius.circular(13),
-            ),
-            prefixIcon: e.icon,
+            // Todo: uncomment to navigate to place picking.
+            onTap: () => Modular.to.pushNamed(AppModule.user + UserHomeModule.delivery + DeliveryModule.placePicking).then((value) {
+              setState(() {
+                type == 1 ? _cubit.placeSender = value as WeMapPlace? : _cubit.placeReceiver = value as WeMapPlace?;
+              });
+            }),
+            keyboardType: TextInputType.text,
+            validator: FormBuilderValidators.required(context),
           ),
-          // Todo: uncomment to navigate to place picking.
-          // onTap: () => Modular.to.pushNamed(AppModule.user + UserHomeModule.delivery + DeliveryModule.placePicking),
-          keyboardType: TextInputType.text,
-          validator: FormBuilderValidators.required(context),
         ),
       );
 }
